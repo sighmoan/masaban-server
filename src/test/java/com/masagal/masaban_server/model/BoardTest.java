@@ -1,9 +1,13 @@
 package com.masagal.masaban_server.model;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest //only because for some reason cannot otherwise set log level
+// TODO: figure out how to otherwise set log level
 class BoardTest {
     Board board = new Board();
 
