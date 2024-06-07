@@ -13,22 +13,24 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1")
 public class MasabanController {
 
-    Logger logger;
+    Logger logger = LogManager.getLogger();
     Board board;
 
-    public MasabanController(Board board, Logger logger) {
+    public MasabanController(Board board/*, Logger logger*/) {
         this.board = board;
-        this.logger = logger;
+        //this.logger = logger;
     }
 
     @PostMapping("/board/")
     public ResponseEntity<String> storeBoard(@RequestBody Board board) {
         this.board = board;
+        logger.info("returned a board");
         return ResponseEntity.ok("yep");
     }
 
     @GetMapping("/board/")
     public ResponseEntity<Board> getBoard() {
+        logger.info("received a request for a board");
         return new ResponseEntity<>(board, HttpStatus.OK);
     }
 }
