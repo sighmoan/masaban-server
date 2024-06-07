@@ -15,10 +15,13 @@ public class Board {
     private final int id;
     private static int assignedIds;
     private int assignedCardIds = 0;
+    private final ArrayList<Column> columns;
+
 
     public Board() {
         cards = new ArrayList<Card>();
         this.id = assignedIds++;
+        columns = new ArrayList<>();
     }
 
     public void add(Card newCard) {
@@ -76,7 +79,9 @@ public class Board {
     }
 
     public Board addColumn(String text, int location) {
-        return null;
+        Column newColumn = new Column(text, location, new ArrayList<>());
+        columns.add(newColumn);
+        return this;
     }
 
     public Board renameColumn(String oldText, String newText, int location) {
