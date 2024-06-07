@@ -1,6 +1,8 @@
 package com.masagal.masaban_server.controllers;
 
 import com.masagal.masaban_server.model.Board;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,8 +34,14 @@ public class MasabanController {
     }
 
     @GetMapping("/{boardId}")
-    public ResponseEntity<Board> getBoard() {
-        logger.info("received a request for a board");
+    @Tag(name="Get currently active board.", description="The ID must match with the currently active board.")
+    @Parameter(name="boardId", description="the ID of the currently active board")
+    public ResponseEntity<Board> getBoard(@PathVariable int boardId) {
+        logger.info("get board no. {}", boardId);
+        if(board.getId() != boardId) {
+            logger.warn("404: the currently active board is {}, not {}", board.getId(), boardId);
+            return ResponseEntity.notFound().build();
+        }
         return new ResponseEntity<>(board, HttpStatus.OK);
     }
 
