@@ -46,4 +46,17 @@ class BoardTest {
         //Assert
         assertEquals(3, board.getCards().size());
     }
+
+    @Test
+    void canUpdateCard() {
+        //Arrange
+        String oldText = "this is the old text";
+        String newText = "the new text this is";
+        //Act
+        Card addedCard = board.createCard(oldText);
+        board.updateCard(addedCard.id(), newText);
+        //Assert
+        assertNotEquals(oldText, board.getCardById(addedCard.id()).text());
+        assertEquals(newText, board.getCardById(addedCard.id()).text());
+    }
 }
