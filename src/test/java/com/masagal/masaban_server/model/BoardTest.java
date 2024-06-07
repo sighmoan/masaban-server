@@ -32,4 +32,18 @@ class BoardTest {
         assertNotNull(fetchedCard);
         assertEquals(textToAdd, fetchedCard.text());
     }
+
+    @Test
+    void canCreateAndListCards() {
+        //Arrange
+        String obi="Obi-wan Kenobi";
+        String yoda="Master Yoda";
+        String luke="Luke Skywalker";
+        //Act
+        board.createCard(obi);
+        board.createCard(yoda);
+        board.createCard(luke);
+        //Assert
+        assertEquals(3, board.getCards().size());
+    }
 }
