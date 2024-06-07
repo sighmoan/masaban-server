@@ -59,4 +59,27 @@ class BoardTest {
         assertNotEquals(oldText, board.getCardById(addedCard.id()).text());
         assertEquals(newText, board.getCardById(addedCard.id()).text());
     }
+
+    @Test
+    void canGetCardsInColumn() {
+        //Arrange
+        Card card1 board.addCard(card1);
+        board.addCard(card2);
+        board.addCard(card3);
+        board.addCard(card4);
+
+        //Act
+        board.addColumn("To do", 1);
+        board.addColumn("Doing", 2);
+
+        board.moveCardToColumn(card1, 2);
+        board.moveCardToColumn(card2, 2);
+        board.moveCardToColumn(card3, 2);
+
+        board.addColumn("Done", 3);
+
+        //Assert
+        assertEquals(3, cardsListColumn.size());
+        assertTrue(cardsListColumn.contains(card1));
+    }
 }
