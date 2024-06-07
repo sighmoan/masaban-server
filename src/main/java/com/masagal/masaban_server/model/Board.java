@@ -90,4 +90,8 @@ public class Board {
     public List<Card> getCardsInColumn(int columnNumber) {
         return null;
     }
+
+    public void moveCardToColumn(Card cardToMove, int columnNumber) {
+
+    }
 }

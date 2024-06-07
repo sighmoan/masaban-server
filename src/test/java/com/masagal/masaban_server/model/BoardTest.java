@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest //only because for some reason cannot otherwise set log level
@@ -63,10 +65,10 @@ class BoardTest {
     @Test
     void canGetCardsInColumn() {
         //Arrange
-        Card card1 board.addCard(card1);
-        board.addCard(card2);
-        board.addCard(card3);
-        board.addCard(card4);
+        Card card1 = board.createCard("this is card1");
+        Card card2 = board.createCard("this is a card2");
+        Card card3 = board.createCard("card3 this is");
+        Card card4 = board.createCard("YIPPEEEEKAAAAYAAAAY MOFUGGA");
 
         //Act
         board.addColumn("To do", 1);
@@ -77,6 +79,8 @@ class BoardTest {
         board.moveCardToColumn(card3, 2);
 
         board.addColumn("Done", 3);
+
+        List<Card> cardsListColumn = board.getCardsInColumn(2);
 
         //Assert
         assertEquals(3, cardsListColumn.size());
