@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -29,24 +30,38 @@ class MasabanControllerTest {
     @BeforeEach
     void setup() {
         restTemplate = new RestTemplate();
+
+        when(mockBoard.getId()).thenReturn(1);
     }
 
     @Test
     void shouldRespondOk() throws Exception {
         // Arrange
         // Act
-        mockMvc.perform(get("/api/v1/board/"))
+        mockMvc.perform(get("/api/v1/board/1"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldRespond404forUnknownBoards() throws Exception {
+        mockMvc.perform(get("/api/v1/board/1337"))
+                .andExpect(status().is4xxClientError());
+        mockMvc.perform(get("/api/v1/board/"))
+                .andExpect(status().is4xxClientError());
+        mockMvc.perform(get("/api/v1/board/abc"))
+                .andExpect(status().is4xxClientError());
+        mockMvc.perform(get("/api/v1/board/00b4rf"))
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
     void canRetrieveStoredCard() throws Exception {
         //Arrange
-        mockMvc.perform(post("/api/v1/board/")
+        mockMvc.perform(post("/api/v1/board/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"cards\":[{\"contents\":\"test\", \"id\": \"1\"}]}"));
         //Act & Asset
-        mockMvc.perform(get("/api/v1/board/"))
+        mockMvc.perform(get("/api/v1/board/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.cards", hasSize(1)))
                 .andExpect(jsonPath("$.cards[0].contents", is("test")))

@@ -8,9 +8,12 @@ import java.util.List;
 @Repository
 public class Board {
     private ArrayList<Card> cards;
+    private int id;
+    private static int assignedIds;
 
     public Board() {
         cards = new ArrayList<Card>();
+        this.id = ++assignedIds;
     }
 
     public void add(Card newCard) {
@@ -23,5 +26,9 @@ public class Board {
 
     public List<Card> getCards() {
         return cards;
+    }
+
+    public int getId() {
+        return this.id;
     }
 }
