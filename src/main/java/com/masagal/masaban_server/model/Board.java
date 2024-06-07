@@ -1,6 +1,5 @@
 package com.masagal.masaban_server.model;
 
-import com.masagal.masaban_server.services.BoardService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
@@ -56,7 +55,15 @@ public class Board {
     }
 
     public Card updateCard(int id, String contents) {
-        return null;
+
+        Card newCard = new Card(contents, id);
+
+        deleteCard(id);
+
+        cards.add(newCard);
+
+        return newCard;
+
     }
 
     public Card updateCard(Card card, String newData) {
@@ -64,7 +71,15 @@ public class Board {
     }
 
     public boolean deleteCard(int id) {
-        return false;
+
+
+        Card deletedCard = getCardById(id);
+
+        cards.remove(deletedCard);
+
+        return true;
+
+
     }
 
     public boolean deleteCard(Card card) {
