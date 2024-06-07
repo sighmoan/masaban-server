@@ -1,5 +1,6 @@
 package com.masagal.masaban_server.model;
 
+import com.masagal.masaban_server.services.BoardService;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -30,5 +31,45 @@ public class Board {
 
     public int getId() {
         return this.id;
+    }
+
+    public Card createCard(String contents) {
+
+    }
+
+    public Card getCardById(int id) {
+
+    }
+
+    public Card updateCard(int id, String contents) {
+
+    }
+
+    public Card updateCard(Card card, String newData) {
+
+    }
+
+    public boolean deleteCard(int id) {
+
+    }
+
+    public boolean deleteCard(Card card) {
+
+    }
+
+    public BoardService addColumn(String text, int location) {
+
+    }
+
+    public BoardService renameColumn(String oldText, String newText, int location) {
+
+    }
+
+    public BoardService removeColumn(String text, int location) {
+
+    }
+
+    public List<Card> getCardsInColumn(int columnNumber) {
+
     }
 }
