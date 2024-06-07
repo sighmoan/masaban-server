@@ -8,8 +8,8 @@ import java.util.List;
 
 @Repository
 public class Board {
-    private ArrayList<Card> cards;
-    private int id;
+    private final ArrayList<Card> cards;
+    private final int id;
     private static int assignedIds;
 
     public Board() {
