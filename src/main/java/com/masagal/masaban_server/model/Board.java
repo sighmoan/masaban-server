@@ -34,42 +34,42 @@ public class Board {
     }
 
     public Card createCard(String contents) {
-
+        return null;
     }
 
     public Card getCardById(int id) {
-
+        return null;
     }
 
     public Card updateCard(int id, String contents) {
-
+        return null;
     }
 
     public Card updateCard(Card card, String newData) {
-
+        return null;
     }
 
     public boolean deleteCard(int id) {
-
+        return false;
     }
 
     public boolean deleteCard(Card card) {
-
+        return false;
     }
 
-    public BoardService addColumn(String text, int location) {
-
+    public Board addColumn(String text, int location) {
+        return null;
     }
 
-    public BoardService renameColumn(String oldText, String newText, int location) {
-
+    public Board renameColumn(String oldText, String newText, int location) {
+        return null;
     }
 
-    public BoardService removeColumn(String text, int location) {
-
+    public Board removeColumn(String text, int location) {
+        return null;
     }
 
     public List<Card> getCardsInColumn(int columnNumber) {
-
+        return null;
     }
 }
