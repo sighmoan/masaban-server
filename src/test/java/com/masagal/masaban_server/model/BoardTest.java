@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BoardTest {
-    Board board;
+    Board board = new Board();
 
     @Test
     void shouldGenerateUniqueId() {
@@ -15,5 +15,17 @@ class BoardTest {
         Board secondBoard = new Board();
         // Assert
         assertNotEquals(firstBoard.getId(), secondBoard.getId());
+    }
+
+    @Test
+    void canCreateCardByStringAndRetrieve() {
+        //Arrange
+        String textToAdd = "this is a test card";
+        //Act
+        Card createdCard = board.createCard(textToAdd);
+        Card fetchedCard = board.getCardById(createdCard.id());
+        //Assert
+        assertNotNull(fetchedCard);
+        assertEquals(textToAdd, fetchedCard.text());
     }
 }
