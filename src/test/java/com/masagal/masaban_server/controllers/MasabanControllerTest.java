@@ -77,4 +77,11 @@ class MasabanControllerTest {
 
     }
 
+    @Test
+    void shouldStoreCard() {
+        // Arrange
+        // Act
+        // Assert
+    }
+
 }

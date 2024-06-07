@@ -36,4 +36,14 @@ public class MasabanController {
         logger.info("received a request for a board");
         return new ResponseEntity<>(board, HttpStatus.OK);
     }
+
+    @PostMapping("/{boardId}/card/{cardId}")
+    public ResponseEntity<String> storeNewCard() {
+        return null;
+    }
+
+    @GetMapping("/{boardId}/card/{cardId}")
+    public ResponseEntity<String> getCard() {
+        return null;
+    }
 }
