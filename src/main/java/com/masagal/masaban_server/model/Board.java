@@ -55,15 +55,10 @@ public class Board {
     }
 
     public Card updateCard(int id, String contents) {
-
         Card newCard = new Card(contents, id);
-
         deleteCard(id);
-
         cards.add(newCard);
-
         return newCard;
-
     }
 
     public Card updateCard(Card card, String newData) {
@@ -71,15 +66,9 @@ public class Board {
     }
 
     public boolean deleteCard(int id) {
-
-
         Card deletedCard = getCardById(id);
-
         cards.remove(deletedCard);
-
         return true;
-
-
     }
 
     public boolean deleteCard(Card card) {
