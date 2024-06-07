@@ -11,7 +11,9 @@ class BoardTest {
     void shouldGenerateUniqueId() {
         // Arrange
         // Act
+        Board firstBoard = new Board();
+        Board secondBoard = new Board();
         // Assert
-        
+        assertNotEquals(firstBoard.getId(), secondBoard.getId());
     }
 }
