@@ -86,4 +86,15 @@ class BoardTest {
         assertEquals(3, cardsListColumn.size());
         assertTrue(cardsListColumn.contains(card1));
     }
+
+    @Test
+    void canGetColumnByLocation() {
+        //Arrange
+        //Act
+        board.addColumn("First column", 1);
+        board.addColumn("Third column", 3);
+        //Assert
+        assertEquals("Third column", board.getColumn(3).name());
+        assertEquals("First column", board.getColumn(1).name());
+    }
 }

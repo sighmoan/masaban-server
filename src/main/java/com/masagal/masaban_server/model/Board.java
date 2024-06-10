@@ -78,6 +78,14 @@ public class Board {
         return false;
     }
 
+    public Column getColumn(int location) {
+        Optional<Column> result = columns.stream().filter((c) -> c.id() == location).findFirst();
+        if(result.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        return result.get();
+    }
+
     public Board addColumn(String text, int location) {
         Column newColumn = new Column(text, location, new ArrayList<>());
         columns.add(newColumn);
@@ -89,14 +97,15 @@ public class Board {
     }
 
     public Board removeColumn(String text, int location) {
-        return null;
+        columns.remove(getColumn(location));
+        return this;
     }
 
     public List<Card> getCardsInColumn(int columnNumber) {
-        return null;
+        return getColumn(columnNumber).cardArray().stream().toList();
     }
 
     public void moveCardToColumn(Card cardToMove, int columnNumber) {
-
+        getColumn(columnNumber).cardArray().add(cardToMove);
     }
 }
