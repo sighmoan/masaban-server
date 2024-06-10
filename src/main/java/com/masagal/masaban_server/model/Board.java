@@ -15,6 +15,9 @@ public class Board {
     private final int id;
     private static int assignedIds;
     private int assignedCardIds = 0;
+
+    private record Column (String name, ArrayList<Card> cardArray) {}
+
     private final ArrayList<Column> columns;
 
 
@@ -78,17 +81,17 @@ public class Board {
         return false;
     }
 
-    public Column getColumn(int location) {
-        Optional<Column> result = columns.stream().filter((c) -> c.id() == location).findFirst();
-        if(result.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
-        return result.get();
+    private Column getColumn(int index) {
+        return columns.get(index);
+    }
+
+    public String getColumnLabel(int index) {
+        return columns.get(index).name();
     }
 
     public Board addColumn(String text, int location) {
-        Column newColumn = new Column(text, location, new ArrayList<>());
-        columns.add(newColumn);
+        Column newColumn = new Column(text, new ArrayList<>());
+        columns.add(location, newColumn);
         return this;
     }
 

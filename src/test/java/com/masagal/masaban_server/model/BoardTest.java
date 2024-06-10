@@ -71,16 +71,16 @@ class BoardTest {
         Card card4 = board.createCard("YIPPEEEEKAAAAYAAAAY MOFUGGA");
 
         //Act
-        board.addColumn("To do", 1);
-        board.addColumn("Doing", 2);
+        board.addColumn("To do", 0);
+        board.addColumn("Doing", 1);
 
-        board.moveCardToColumn(card1, 2);
-        board.moveCardToColumn(card2, 2);
-        board.moveCardToColumn(card3, 2);
+        board.moveCardToColumn(card1, 1);
+        board.moveCardToColumn(card2, 1);
+        board.moveCardToColumn(card3, 1);
 
-        board.addColumn("Done", 3);
+        board.addColumn("Done", 2);
 
-        List<Card> cardsListColumn = board.getCardsInColumn(2);
+        List<Card> cardsListColumn = board.getCardsInColumn(1);
 
         //Assert
         assertEquals(3, cardsListColumn.size());
@@ -91,20 +91,29 @@ class BoardTest {
     void canGetColumnByLocation() {
         //Arrange
         //Act
-        board.addColumn("First column", 1);
-        board.addColumn("Third column", 3);
+        board.addColumn("First column", 0);
+        board.addColumn("Second column", 1);
         //Assert
-        assertEquals("Third column", board.getColumn(3).name());
-        assertEquals("First column", board.getColumn(1).name());
+        assertEquals("Second column", board.getColumnLabel(1));
+        assertEquals("First column", board.getColumnLabel(0));
     }
 
     @Test
     void canRenameColumn() {
         //Arrange
-        board.addColumn("First column", 1)
-                .renameColumn("First column", "Third column", 1);
+        board.addColumn("First column", 0)
+                .renameColumn("First column", "Third column", 0);
         //Act
         //Assert
-        assertEquals("Third column", board.getColumn(1).name());
+        assertEquals("Third column", board.getColumnLabel(0));
+    }
+
+    @Test
+    void cannotGetColumnOutOfBounds() {
+        //Arrange
+        board.addColumn("First", 0);
+        //Act
+        //Assert
+        assertThrows(IndexOutOfBoundsException.class, () -> board.addColumn("Second", 3));
     }
 }
