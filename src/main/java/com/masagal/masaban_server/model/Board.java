@@ -86,21 +86,23 @@ public class Board {
     }
 
     public String getColumnLabel(int index) {
-        return columns.get(index).name();
+        return getColumn(index).name();
+    }
+
+    private Board addColumn(String text, int location, ArrayList<Card> cardArray) {
+        Column newColumn = new Column(text, cardArray);
+        columns.add(location, newColumn);
+        return this;
     }
 
     public Board addColumn(String text, int location) {
-        Column newColumn = new Column(text, new ArrayList<>());
-        columns.add(location, newColumn);
-        return this;
+        return addColumn(text, location, new ArrayList<Card>());
     }
 
     public Board renameColumn(String newText, int location) {
         Column oldColumn = getColumn(location);
-        Column newColumn = new Column(newText, oldColumn.cardArray());
-        columns.add(location, newColumn);
-        removeColumn(oldColumn);
-        return this;
+        addColumn(newText, location, oldColumn.cardArray());
+        return removeColumn(oldColumn);
     }
 
     private Board removeColumn(Column column) {
@@ -109,12 +111,11 @@ public class Board {
     }
 
     public Board removeColumn(int location) {
-        columns.remove(getColumn(location));
-        return this;
+        return removeColumn(getColumn(location));
     }
 
     public List<Card> getCardsInColumn(int columnNumber) {
-        return getColumn(columnNumber).cardArray().stream().toList();
+        return getColumn(columnNumber).cardArray();
     }
 
     public void moveCardToColumn(Card cardToMove, int columnNumber) {
