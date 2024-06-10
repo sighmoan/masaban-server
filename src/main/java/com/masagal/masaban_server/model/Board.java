@@ -95,11 +95,20 @@ public class Board {
         return this;
     }
 
-    public Board renameColumn(String oldText, String newText, int location) {
-        return null;
+    public Board renameColumn(String newText, int location) {
+        Column oldColumn = getColumn(location);
+        Column newColumn = new Column(newText, oldColumn.cardArray());
+        columns.add(location, newColumn);
+        removeColumn(oldColumn);
+        return this;
     }
 
-    public Board removeColumn(String text, int location) {
+    private Board removeColumn(Column column) {
+        columns.remove(column);
+        return this;
+    }
+
+    public Board removeColumn(int location) {
         columns.remove(getColumn(location));
         return this;
     }

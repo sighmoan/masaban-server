@@ -101,8 +101,8 @@ class BoardTest {
     @Test
     void canRenameColumn() {
         //Arrange
-        board.addColumn("First column", 0)
-                .renameColumn("First column", "Third column", 0);
+        board.addColumn("First column", 0);
+        board.renameColumn("Third column", 0);
         //Act
         //Assert
         assertEquals("Third column", board.getColumnLabel(0));
