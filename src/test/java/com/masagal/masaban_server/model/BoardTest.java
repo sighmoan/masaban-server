@@ -97,4 +97,14 @@ class BoardTest {
         assertEquals("Third column", board.getColumn(3).name());
         assertEquals("First column", board.getColumn(1).name());
     }
+
+    @Test
+    void canRenameColumn() {
+        //Arrange
+        board.addColumn("First column", 1)
+                .renameColumn("First column", "Third column", 1);
+        //Act
+        //Assert
+        assertEquals("Third column", board.getColumn(1).name());
+    }
 }
