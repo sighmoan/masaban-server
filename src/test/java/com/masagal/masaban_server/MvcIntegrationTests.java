@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -19,6 +20,13 @@ public class MvcIntegrationTests {
 
     @Autowired
     private MockMvc mockMvc;
+
+    private String setUpBoard() throws Exception {
+        MvcResult result = mockMvc.perform(post("/api/v1/board"))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+        return result.getResponse().getHeader("location");
+    }
 
     @Test
     void canCreateNewBoard() throws Exception {
@@ -47,11 +55,8 @@ public class MvcIntegrationTests {
     @Test
     void canUpdateContentOfCard() throws Exception {
         //Arrange
-        MvcResult result = mockMvc.perform(post("/api/v1/board"))
-                .andExpect(status().is2xxSuccessful())
-                .andReturn();
-        String boardLocation = result.getResponse().getHeader("location");
-        result = mockMvc.perform(post(boardLocation + "/card"))
+        String boardLocation = setUpBoard();
+        MvcResult result = mockMvc.perform(post(boardLocation + "/card"))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
         String cardLocation = result.getResponse().getHeader("location");
@@ -62,5 +67,20 @@ public class MvcIntegrationTests {
                 .content(updatedCard))
         //Assert
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void canDeleteCard() throws Exception {
+        //Arrange
+        String boardLocation = setUpBoard();
+        MvcResult result = mockMvc.perform(post(boardLocation + "/card"))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+        String cardLocation = result.getResponse().getHeader("location");
+        //Act
+        mockMvc.perform(delete(cardLocation))
+        //Assert
+                .andExpect(status().is2xxSuccessful());
+
     }
 }
