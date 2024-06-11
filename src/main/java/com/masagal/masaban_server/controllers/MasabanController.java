@@ -75,4 +75,10 @@ public class MasabanController {
         Card resultingCard = board.updateCard(requestedCard.id(), requestedCard.text());
         return ResponseEntity.ok(resultingCard);
     }
+
+    @DeleteMapping("/{boardId}/card/{cardId}")
+    public ResponseEntity<Card> deleteCard(@PathVariable String cardId) {
+        board.deleteCard(Integer.parseInt(cardId));
+        return ResponseEntity.ok().build();
+    }
 }
