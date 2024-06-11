@@ -69,4 +69,10 @@ public class MasabanController {
     public ResponseEntity<String> getCard() {
         return null;
     }
+
+    @PostMapping("/{boardId}/card/{cardId}")
+    public ResponseEntity<Card> updateCard(@RequestBody Card requestedCard) {
+        Card resultingCard = board.updateCard(requestedCard.id(), requestedCard.text());
+        return ResponseEntity.ok(resultingCard);
+    }
 }
