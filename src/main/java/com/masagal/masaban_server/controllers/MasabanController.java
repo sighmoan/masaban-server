@@ -1,9 +1,11 @@
 package com.masagal.masaban_server.controllers;
 
 import com.masagal.masaban_server.model.Board;
+import com.masagal.masaban_server.model.Card;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.coyote.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +57,12 @@ public class MasabanController {
         return new ResponseEntity<>(board, HttpStatus.OK);
     }
 
-    @PostMapping("/{boardId}/card/{cardId}")
-    public ResponseEntity<String> storeNewCard() {
-        return null;
+    @PostMapping("/{boardId}/card")
+    public ResponseEntity<Card> storeNewCard() {
+        Card resultingCard = board.createCard("");
+        URI location = URI.create("/api/v1/board/"+board.getId()+"/card/"+resultingCard.id());
+        return ResponseEntity.created(location)
+                .body(resultingCard);
     }
 
     @GetMapping("/{boardId}/card/{cardId}")
