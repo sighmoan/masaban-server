@@ -42,4 +42,23 @@ public class MvcIntegrationTests {
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("location"));
     }
+
+    @Test
+    void canUpdateContentOfCard() throws Exception {
+        //Arrange
+        MvcResult result = mockMvc.perform(post("/api/v1/board"))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+        String boardLocation = result.getResponse().getHeader("location");
+        result = mockMvc.perform(post(boardLocation + "/card"))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+        String cardLocation = result.getResponse().getHeader("location");
+        String cardId = cardLocation.substring(cardLocation.lastIndexOf("/card/")+6);
+        //Act
+        String updatedCard = "{\"id\": "+cardId+", \"contents\":\"This is the contents of a card.\"}";
+        mockMvc.perform(post(cardLocation).content(updatedCard))
+        //Assert
+                .andExpect(status().isOk());
+    }
 }
