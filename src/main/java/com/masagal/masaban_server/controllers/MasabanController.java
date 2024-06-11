@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v1/board")
@@ -25,12 +28,19 @@ public class MasabanController {
         //this.logger = logger;
     }
 
-    @PostMapping("/{boardId}")
+    @PostMapping
     @Tag(name="Create board")
-    public ResponseEntity<String> storeBoard(@RequestBody Board board) {
-        this.board = board;
-        logger.info("returned a board");
-        return ResponseEntity.ok("yep");
+    public ResponseEntity<String> storeBoard() throws URISyntaxException {
+        this.board = new Board();
+        logger.info("created a board");
+        URI location = null;
+        try {
+            location = new URI("/api/v1/board/"+board.getId());
+        } catch(URISyntaxException ex) {
+            logger.error("Failed to generate URI for location header.");
+            throw new URISyntaxException("api/v1/board/"+board.getId(), "Failed to generate location URI.");
+        }
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/{boardId}")
