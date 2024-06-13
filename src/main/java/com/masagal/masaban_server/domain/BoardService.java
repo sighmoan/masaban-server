@@ -58,4 +58,12 @@ public class BoardService {
     public String[] getColumns(UUID boardId) {
         return getBoard(boardId).getColumnLabels();
     }
+
+    public void renameColumn(UUID boardId, int columnIndex, String newText) {
+        getBoard(boardId).renameColumn(newText, columnIndex);
+    }
+
+    public void insertColumn(UUID boardId, int columnIndex, String text) {
+        getBoard(boardId).addColumn(text, columnIndex);
+    }
 }

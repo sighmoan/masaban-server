@@ -128,6 +128,13 @@ class BoardTest {
         }
 
         @Test
+        void canInsertColumn() {
+            board.addColumn("New column", 1);
+
+            assertEquals("New column", board.getColumnLabel(1));
+        }
+
+        @Test
         void canRenameColumn() {
             //Arrange
             board.addColumn("First column", 0);

@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -93,5 +94,30 @@ public class MvcIntegrationTests {
         mockMvc.perform(get(boardLocation + "/columns"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("length()", is(3)));
+    }
+
+    @Test
+    void canInsertColumn() throws Exception {
+        String boardLocation = setUpBoard();
+        mockMvc.perform(post(boardLocation + "/column/1")
+                        .content("New column name"))
+                .andExpect(status().isCreated());
+        mockMvc.perform(get(boardLocation + "/columns"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers
+                        .jsonPath("$.[1]", containsString("New column name")));
+
+    }
+
+    @Test
+    void canRenameColumn() throws Exception {
+        String boardLocation = setUpBoard();
+        mockMvc.perform(put(boardLocation + "/column/1")
+                        .content("New column name"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get(boardLocation + "/columns"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers
+                        .jsonPath("$.[1]", containsString("New column name")));
     }
 }

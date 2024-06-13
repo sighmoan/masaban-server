@@ -1,20 +1,17 @@
 package com.masagal.masaban_server.http;
 
-import com.masagal.masaban_server.model.Board;
 import com.masagal.masaban_server.domain.BoardService;
+import com.masagal.masaban_server.model.Board;
 import com.masagal.masaban_server.model.Card;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -60,7 +57,7 @@ class MasabanControllerTest {
     void shouldRespondOk() throws Exception {
         // Arrange
         // Act
-        mockMvc.perform(get("/api/v1/board/"+ useBoardUuid))
+        mockMvc.perform(get("/api/v1/board/" + useBoardUuid))
                 .andExpect(status().isOk());
     }
 
@@ -76,7 +73,7 @@ class MasabanControllerTest {
     void shouldRespond404ForUnknownUuids() throws Exception {
         when(boardService.getBoard(ArgumentMatchers.any(UUID.class)))
                 .thenThrow(new NoSuchElementException("hello"));
-        mockMvc.perform(get("/api/v1/board/"+UUID.randomUUID()))
+        mockMvc.perform(get("/api/v1/board/" + UUID.randomUUID()))
                 .andExpect(status().isNotFound());
     }
 
@@ -88,7 +85,7 @@ class MasabanControllerTest {
     }
 
     @Test
-    void shouldCreateCard() throws Exception{
+    void shouldCreateCard() throws Exception {
         String boardLocation = mockMvc.perform(post("/api/v1/board"))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("location"))
@@ -111,7 +108,7 @@ class MasabanControllerTest {
                 .getResponse()
                 .getHeader("location");
 
-        String cardLocation = mockMvc.perform(post(boardLocation+"/card"))
+        String cardLocation = mockMvc.perform(post(boardLocation + "/card"))
                 .andReturn()
                 .getResponse()
                 .getHeader("location");
@@ -134,7 +131,7 @@ class MasabanControllerTest {
                 .getResponse()
                 .getHeader("location");
 
-        String cardLocation = mockMvc.perform(post(boardLocation+"/card"))
+        String cardLocation = mockMvc.perform(post(boardLocation + "/card"))
                 .andReturn()
                 .getResponse()
                 .getHeader("location");
@@ -145,8 +142,8 @@ class MasabanControllerTest {
 
     @Test
     void shouldRespond400ForInvalidCardUuid() throws Exception {
-        String invalidCardLocation = "/api/v1/board/"+UUID.randomUUID()
-            +"/card/aabbccdd";
+        String invalidCardLocation = "/api/v1/board/" + UUID.randomUUID()
+                + "/card/aabbccdd";
 
         mockMvc.perform(get(invalidCardLocation))
                 .andExpect(status().isBadRequest());
@@ -161,8 +158,8 @@ class MasabanControllerTest {
         when(boardService.getCardOnBoard(ArgumentMatchers.any(UUID.class), ArgumentMatchers.any(UUID.class)))
                 .thenThrow(new NoSuchElementException("not found"));
 
-        String unknownCardLocation = "/api/v1/board/"+UUID.randomUUID()
-                +"/card/"+UUID.randomUUID();
+        String unknownCardLocation = "/api/v1/board/" + UUID.randomUUID()
+                + "/card/" + UUID.randomUUID();
         mockMvc.perform(get(unknownCardLocation))
                 .andExpect(status().isNotFound());
     }
@@ -182,9 +179,23 @@ class MasabanControllerTest {
 
             String[] columns;
 
-            mockMvc.perform(get(boardLocation+"/columns"))
+            mockMvc.perform(get(boardLocation + "/columns"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("length()", is(3)));
+        }
+
+        @Test
+        void shouldInsertNewColumn() throws Exception {
+            mockMvc.perform(post(boardLocation + "/column/1")
+                            .content("New column name"))
+                    .andExpect(status().isCreated());
+        }
+
+        @Test
+        void shouldRenameColumn() throws Exception {
+            mockMvc.perform(put(boardLocation + "/column/1")
+                                .content("New column name"))
+                    .andExpect(status().isOk());
         }
     }
 

@@ -59,5 +59,23 @@ class BoardServiceTest {
             assertNotEquals(0, cols.length);
             assertNotEquals("", cols[cols.length-1]);
         }
+
+        @Test
+        void canInsertColumn() {
+            int previousColsCount = boardService.getColumns(colsBoardId).length;
+            boardService.insertColumn(colsBoardId, 1, "New column text");
+            String[] cols = boardService.getColumns(colsBoardId);
+            assertEquals("New column text", cols[1]);
+            assertEquals(cols.length, previousColsCount+1);
+        }
+
+        @Test
+        void canRenameColumns() {
+            int previousColsCount = boardService.getColumns(colsBoardId).length;
+            boardService.renameColumn(colsBoardId,1, "New column text");
+            String[] cols = boardService.getColumns(colsBoardId);
+            assertEquals("New column text", cols[1]);
+            assertEquals(cols.length, previousColsCount);
+        }
     }
 }
