@@ -16,6 +16,7 @@ public class Board {
     private final UUID id;
     private int assignedCardIds = 0;
 
+
     private record Column (String name, ArrayList<Card> cardArray) {}
 
     private final ArrayList<Column> columns;
@@ -85,6 +86,10 @@ public class Board {
 
     private Column getColumn(int index) {
         return columns.get(index);
+    }
+
+    public String[] getColumnLabels() {
+        return null;
     }
 
     public String getColumnLabel(int index) {

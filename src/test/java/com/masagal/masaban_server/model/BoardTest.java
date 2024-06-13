@@ -87,6 +87,11 @@ class BoardTest {
     @Nested
     public class ColumnFunctionalityTests {
         @Test
+        void hasColumnsByDefault() {
+            assertNotEquals(0, board.getColumnLabels().length);
+        }
+
+        @Test
         void canGetCardsInColumn() {
             //Arrange
             Card card1 = board.createCard("this is card1");
