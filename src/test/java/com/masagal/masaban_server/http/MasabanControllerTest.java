@@ -3,7 +3,9 @@ package com.masagal.masaban_server.http;
 import com.masagal.masaban_server.model.Board;
 import com.masagal.masaban_server.domain.BoardService;
 import com.masagal.masaban_server.model.Card;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Spy;
@@ -12,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -44,6 +47,8 @@ class MasabanControllerTest {
                 .thenReturn(useBoardUuid);
         when(boardService.createCardOnBoard(ArgumentMatchers.any(UUID.class)))
                 .thenReturn(useCardUuid);
+        when(boardService.getColumns(ArgumentMatchers.any(UUID.class)))
+                .thenReturn(new String[]{"To-do", "Doing", "Done"});
 
         when(mockCard.id())
                 .thenReturn(UUID.randomUUID());
@@ -160,6 +165,27 @@ class MasabanControllerTest {
                 +"/card/"+UUID.randomUUID();
         mockMvc.perform(get(unknownCardLocation))
                 .andExpect(status().isNotFound());
+    }
+
+    @Nested
+    public class columnControllingTests {
+
+        static String boardLocation = "";
+
+        @BeforeAll
+        static void columnSetup() {
+            boardLocation = "/api/v1/board/" + UUID.randomUUID();
+        }
+
+        @Test
+        void shouldGetColumnLabels() throws Exception {
+
+            String[] columns;
+
+            mockMvc.perform(get(boardLocation+"/columns"))
+                    .andExpect(status().isOk())
+                    .andExpect((ResultMatcher) jsonPath("length()", is(3)));
+        }
     }
 
 }

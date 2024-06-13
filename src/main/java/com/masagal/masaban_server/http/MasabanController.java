@@ -88,4 +88,9 @@ public class MasabanController {
 
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/{boardId}/columns")
+    public ResponseEntity<String[]> getColumns(@PathVariable @Valid UUID boardId) {
+        return null;
+    }
 }
