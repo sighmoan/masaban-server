@@ -184,7 +184,7 @@ class MasabanControllerTest {
 
             mockMvc.perform(get(boardLocation+"/columns"))
                     .andExpect(status().isOk())
-                    .andExpect((ResultMatcher) jsonPath("length()", is(3)));
+                    .andExpect(jsonPath("length()", is(3)));
         }
     }
 
