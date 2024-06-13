@@ -35,7 +35,7 @@ public class MasabanController {
     }
 
     private URI createRelativeApiUri(String ... args) {
-        String completeString = API_ROOT + String.join("/", args);
+        String completeString = API_ROOT + "/" + String.join("/", args);
         try {
             return new URI(completeString);
         } catch(URISyntaxException e) {
@@ -48,7 +48,7 @@ public class MasabanController {
     @Tag(name="Create board")
     public ResponseEntity<String> storeBoard() throws URISyntaxException {
         UUID id = service.createBoard();
-        logger.info("created a board");
+        logger.info("created a board with id "+id.toString());
         URI location = createRelativeApiUri(id.toString());
 
         return ResponseEntity.created(location).build();
@@ -65,7 +65,7 @@ public class MasabanController {
     @PostMapping("/{boardId}/card")
     public ResponseEntity<Card> storeNewCard(@PathVariable @Valid UUID boardId) {
         UUID cardId = service.createCardOnBoard(boardId);
-        URI location = URI.create(API_ROOT+boardId+"/card/"+cardId);
+        URI location = createRelativeApiUri(boardId.toString(), "card", cardId.toString());
 
         return ResponseEntity.created(location).build();
     }
