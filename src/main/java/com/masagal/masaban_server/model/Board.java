@@ -7,13 +7,13 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class Board {
     private final Logger logger = LogManager.getLogger();
     private final ArrayList<Card> cards;
-    private final int id;
-    private static int assignedIds;
+    private final UUID id;
     private int assignedCardIds = 0;
 
     private record Column (String name, ArrayList<Card> cardArray) {}
@@ -23,7 +23,7 @@ public class Board {
 
     public Board() {
         cards = new ArrayList<Card>();
-        this.id = assignedIds++;
+        this.id = UUID.randomUUID();
         columns = new ArrayList<>();
     }
 
@@ -39,7 +39,7 @@ public class Board {
         return cards;
     }
 
-    public int getId() {
+    public UUID getId() {
         return this.id;
     }
 

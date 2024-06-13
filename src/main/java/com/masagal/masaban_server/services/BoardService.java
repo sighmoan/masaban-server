@@ -1,23 +1,22 @@
 package com.masagal.masaban_server.services;
 
 import com.masagal.masaban_server.model.Board;
-import com.masagal.masaban_server.model.Card;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.UUID;
 
 @Service
 public class BoardService {
-    Board board;
+    HashMap<UUID, Board> boards = new HashMap<>();
 
-    public BoardService() {
-
+    public Board addBoard(Board board) {
+        boards.put(board.getId(), board);
+        return board;
     }
 
-    public BoardService(int withBoardId) {
-
+    public Board getBoard(UUID id) {
+        return boards.get(id);
     }
-
-
-
 }

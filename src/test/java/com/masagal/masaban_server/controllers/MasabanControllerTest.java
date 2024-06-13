@@ -2,6 +2,7 @@ package com.masagal.masaban_server.controllers;
 
 import com.jayway.jsonpath.JsonPath;
 import com.masagal.masaban_server.model.Board;
+import com.masagal.masaban_server.services.BoardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.UUID;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,15 +26,16 @@ class MasabanControllerTest {
 
     @MockBean
     Board mockBoard;
+    @MockBean
+    BoardService boardService;
     @Autowired
     private MockMvc mockMvc;
-    RestTemplate restTemplate;
+    UUID useUuid = UUID.randomUUID();
 
     @BeforeEach
     void setup() {
-        restTemplate = new RestTemplate();
 
-        when(mockBoard.getId()).thenReturn(1);
+        when(mockBoard.getId()).thenReturn(useUuid);
     }
 
     @Test
@@ -57,9 +61,10 @@ class MasabanControllerTest {
     @Test
     void canRetrieveStoredCard() throws Exception {
         //Arrange
-        mockMvc.perform(post("/api/v1/board/1")
+        UUID uuid = UUID.randomUUID();
+        mockMvc.perform(post("/api/v1/board/"+mockBoard.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"cards\":[{\"contents\":\"test\", \"id\": \"1\"}]}"));
+                .content("{\"cards\":[{\"contents\":\"test\", \"id\":"+uuid.toString()+"}]}"));
         //Act & Asset
         mockMvc.perform(get("/api/v1/board/1"))
                 .andExpect(status().isOk())

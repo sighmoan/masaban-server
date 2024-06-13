@@ -9,8 +9,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -82,5 +82,13 @@ public class MvcIntegrationTests {
         //Assert
                 .andExpect(status().is2xxSuccessful());
 
+    }
+
+    @Test
+    void canGetColumns() throws Exception {
+        //Arrange
+        String boardLocation = setUpBoard();
+        mockMvc.perform(get(boardLocation + "/columns"))
+                .andExpect(status().isOk());
     }
 }
