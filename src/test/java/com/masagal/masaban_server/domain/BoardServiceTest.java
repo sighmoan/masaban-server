@@ -47,7 +47,7 @@ class BoardServiceTest {
 
         @Test
         void canGetColumnLabels() {
-            String[] cols = boardService.getColumns();
+            String[] cols = boardService.getColumns(useUuid);
             assertNotNull(cols);
             assertNotEquals(0, cols.length);
             assertNotEquals("", cols[cols.length-1]);
