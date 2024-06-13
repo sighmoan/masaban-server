@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -73,6 +74,26 @@ public class MvcIntegrationTests {
     }
 
     @Test
+    void shouldErrorCardsNotFound() throws Exception {
+        fail();
+    }
+
+    @Test
+    void shouldErrorUpdatedCardContentsEmpty() throws Exception {
+        fail();
+    }
+
+    @Test
+    void shouldErrorUpdatedCardContentsUnchanged() throws Exception {
+        fail();
+    }
+
+    @Test
+    void canMoveCardToAnotherColumn() throws Exception {
+        fail();
+    }
+
+    @Test
     void canDeleteCard() throws Exception {
         //Arrange
         String boardLocation = setUpBoard();
@@ -94,6 +115,11 @@ public class MvcIntegrationTests {
         mockMvc.perform(get(boardLocation + "/columns"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("length()", is(3)));
+    }
+
+    @Test
+    void canGetCardsInColumn() throws Exception {
+        fail();
     }
 
     @Test
