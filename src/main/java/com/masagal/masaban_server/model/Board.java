@@ -44,13 +44,13 @@ public class Board {
     }
 
     public Card createCard(String contents) {
-        Card card = new Card(contents, ++assignedCardIds);
+        Card card = new Card(contents, UUID.randomUUID());
         cards.add(card);
         logger.debug("created card with id {} and contents {}", card.id(), card.text());
         return card;
     }
 
-    public Card getCardById(int cardId) {
+    public Card getCardById(UUID cardId) {
         Optional<Card> result = cards.stream().filter((x) -> x.id() == cardId).findFirst();
         if(result.isEmpty()) {
             logger.error("Card requested with id {} does not exist", cardId);
@@ -60,7 +60,7 @@ public class Board {
         return result.get();
     }
 
-    public Card updateCard(int id, String contents) {
+    public Card updateCard(UUID id, String contents) {
         Card newCard = new Card(contents, id);
         deleteCard(id);
         cards.add(newCard);
@@ -71,7 +71,7 @@ public class Board {
         return null;
     }
 
-    public boolean deleteCard(int id) {
+    public boolean deleteCard(UUID id) {
         Card deletedCard = getCardById(id);
         cards.remove(deletedCard);
         return true;

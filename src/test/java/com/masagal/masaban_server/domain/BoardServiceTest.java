@@ -1,4 +1,4 @@
-package com.masagal.masaban_server.services;
+package com.masagal.masaban_server.domain;
 
 import com.masagal.masaban_server.model.Board;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,9 +33,9 @@ class BoardServiceTest {
     @Test
     void canGetBoard() {
         //Arrange
-        boardService.addBoard(mockBoard);
+        UUID boardId = boardService.createBoard();
         //Act
         //Assert
-        assertNotNull(boardService.getBoard(useUuid));
+        assertNotNull(boardService.getBoard(boardId));
     }
 }

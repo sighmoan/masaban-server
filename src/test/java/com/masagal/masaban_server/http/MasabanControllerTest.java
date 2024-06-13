@@ -1,8 +1,7 @@
-package com.masagal.masaban_server.controllers;
+package com.masagal.masaban_server.http;
 
-import com.jayway.jsonpath.JsonPath;
 import com.masagal.masaban_server.model.Board;
-import com.masagal.masaban_server.services.BoardService;
+import com.masagal.masaban_server.domain.BoardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +10,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
