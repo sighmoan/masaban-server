@@ -4,13 +4,14 @@ import com.masagal.masaban_server.model.Board;
 import com.masagal.masaban_server.domain.BoardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.*;
@@ -27,51 +28,49 @@ class MasabanControllerTest {
     BoardService boardService;
     @Autowired
     private MockMvc mockMvc;
-    UUID useUuid = UUID.randomUUID();
+    UUID useBoardUuid = UUID.randomUUID();
+    UUID useCardUuid = UUID.randomUUID();
 
     @BeforeEach
     void setup() {
 
-        when(mockBoard.getId()).thenReturn(useUuid);
+        when(mockBoard.getId())
+                .thenReturn(useBoardUuid);
+        when(boardService.createBoard())
+                .thenReturn(useBoardUuid);
+        when(boardService.createCardOnBoard(ArgumentMatchers.any(UUID.class)))
+                .thenReturn(useCardUuid);
     }
 
     @Test
     void shouldRespondOk() throws Exception {
         // Arrange
         // Act
-        mockMvc.perform(get("/api/v1/board/1"))
+        mockMvc.perform(get("/api/v1/board/"+ useBoardUuid))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void shouldRespond404forUnknownBoards() throws Exception {
+    void shouldRespond400ForBadUuids() throws Exception {
         mockMvc.perform(get("/api/v1/board/1337"))
-                .andExpect(status().is4xxClientError());
-        mockMvc.perform(get("/api/v1/board/"))
-                .andExpect(status().is4xxClientError());
-        mockMvc.perform(get("/api/v1/board/abc"))
-                .andExpect(status().is4xxClientError());
-        mockMvc.perform(get("/api/v1/board/00b4rf"))
-                .andExpect(status().is4xxClientError());
-    }
-
-    @Test
-    void canRetrieveStoredCard() throws Exception {
-        //Arrange
-        UUID uuid = UUID.randomUUID();
-        mockMvc.perform(post("/api/v1/board/"+mockBoard.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"cards\":[{\"contents\":\"test\", \"id\":"+uuid.toString()+"}]}"));
-        //Act & Asset
+                .andExpect(status().isBadRequest());
         mockMvc.perform(get("/api/v1/board/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.cards", hasSize(1)))
-                .andExpect(jsonPath("$.cards[0].contents", is("test")))
-                .andExpect(jsonPath("$.cards[0].contents", not("not test")));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    void shouldReturnBoardOnRequest() throws Exception {
+    void shouldRespond404ForUnknownUuids() throws Exception {
+        when(boardService.getBoard(ArgumentMatchers.any(UUID.class)))
+                .thenThrow(new NoSuchElementException("hello"));
+        mockMvc.perform(get("/api/v1/board/"+UUID.randomUUID()))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldCreateBoard() throws Exception {
+        mockMvc.perform(post("/api/v1/board"))
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("location"));
     }
 
     @Test
