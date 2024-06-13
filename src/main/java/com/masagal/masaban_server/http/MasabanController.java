@@ -1,9 +1,8 @@
 package com.masagal.masaban_server.http;
 
+import com.masagal.masaban_server.domain.BoardService;
 import com.masagal.masaban_server.model.Board;
 import com.masagal.masaban_server.model.Card;
-import com.masagal.masaban_server.domain.BoardService;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
@@ -12,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.util.UriBuilder;
-import org.yaml.snakeyaml.util.ArrayUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,7 +19,7 @@ import java.util.UUID;
 @RestController
 @CrossOrigin
 @RequestMapping(MasabanController.API_ROOT)
-@Tag(name="Main Board interface", description="Primary interface for CRUD'ing masaban boards.")
+@Tag(name = "Main Board interface", description = "Primary interface for CRUD'ing masaban boards.")
 public class MasabanController {
 
     public static final String API_ROOT = "/api/v1/board";
@@ -34,28 +31,28 @@ public class MasabanController {
         this.service = service;
     }
 
-    private URI createRelativeApiUri(String ... args) {
+    private URI createRelativeApiUri(String... args) {
         String completeString = API_ROOT + "/" + String.join("/", args);
         try {
             return new URI(completeString);
-        } catch(URISyntaxException e) {
+        } catch (URISyntaxException e) {
             logger.error("URI generation failed.");
             throw new HttpServerErrorException(HttpStatus.I_AM_A_TEAPOT, "URI generation failed");
         }
     }
 
     @PostMapping
-    @Tag(name="Create board")
+    @Tag(name = "Create board")
     public ResponseEntity<String> storeBoard() throws URISyntaxException {
         UUID id = service.createBoard();
-        logger.info("created a board with id "+id.toString());
+        logger.info("created a board with id " + id.toString());
         URI location = createRelativeApiUri(id.toString());
 
         return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/{boardId}")
-    @Tag(name="Get board by ID")
+    @Tag(name = "Get board by ID")
     public ResponseEntity<Board> getBoard(@PathVariable @Valid UUID boardId) {
         logger.info("get board no. {}", boardId);
 
@@ -92,5 +89,24 @@ public class MasabanController {
     @GetMapping("/{boardId}/columns")
     public ResponseEntity<String[]> getColumns(@PathVariable @Valid UUID boardId) {
         return ResponseEntity.ok(service.getColumns(boardId));
+    }
+
+    @PostMapping("/{boardId}/column/{columnIndex}")
+    @Tag(name = "Insert a new column at the specified index")
+    public ResponseEntity<Void> writeColumn(@PathVariable @Valid UUID boardId,
+                                            @PathVariable int columnIndex,
+                                            @RequestBody String newColumnName) {
+        service.insertColumn(boardId, columnIndex, newColumnName);
+        URI location = createRelativeApiUri(boardId.toString(), "column", Integer.toString(columnIndex));
+        return ResponseEntity.created(location).build();
+    }
+
+    @PutMapping("/{boardId}/column/{columnIndex}")
+    @Tag(name = "Rename the specified column")
+    public ResponseEntity<Void> renameColumn(@PathVariable @Valid UUID boardId,
+                                             @PathVariable int columnIndex,
+                                             @RequestBody String newColumnName) {
+        service.renameColumn(boardId, columnIndex, newColumnName);
+        return ResponseEntity.ok().build();
     }
 }
