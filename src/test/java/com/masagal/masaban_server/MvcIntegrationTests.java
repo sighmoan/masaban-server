@@ -120,4 +120,27 @@ public class MvcIntegrationTests {
                 .andExpect(MockMvcResultMatchers
                         .jsonPath("$.[1]", containsString("New column name")));
     }
+
+    @Test
+    void should404IfColumnIndexInvalid() throws Exception {
+        String boardLocation = setUpBoard();
+        mockMvc.perform(post(boardLocation + "/column/403")
+                        .content("New column name"))
+                .andExpect(status().isNotFound());
+        mockMvc.perform(put(boardLocation + "/column/403")
+                            .content("New column name"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void should400IfColumnContentMissing() throws Exception {
+        String boardLocation = setUpBoard();
+        mockMvc.perform(post(boardLocation + "/column/1")
+                        .content(""))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(put(boardLocation + "/column/1")
+                        .content(""))
+                .andExpect(status().isBadRequest());
+
+    }
 }

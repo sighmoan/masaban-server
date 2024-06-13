@@ -23,8 +23,8 @@ public class MasabanControllerAdvice {
         return ResponseEntity.badRequest().build();
     }
 
-    @ExceptionHandler(NoSuchElementException.class)
-    protected ResponseEntity<Void> handleNotFound(NoSuchElementException ex) {
+    @ExceptionHandler({NoSuchElementException.class, IndexOutOfBoundsException.class})
+    protected ResponseEntity<Void> handleNotFound(Exception ex) {
         logger.error(ex.getMessage());
         return ResponseEntity.notFound().build();
     }
