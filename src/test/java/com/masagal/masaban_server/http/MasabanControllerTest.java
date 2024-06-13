@@ -138,4 +138,28 @@ class MasabanControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void shouldRespond400ForInvalidCardUuid() throws Exception {
+        String invalidCardLocation = "/api/v1/board/"+UUID.randomUUID()
+            +"/card/aabbccdd";
+
+        mockMvc.perform(get(invalidCardLocation))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(post(invalidCardLocation))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(delete(invalidCardLocation))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldRespond404ForUnknownCardUuid() throws Exception {
+        when(boardService.getCardOnBoard(ArgumentMatchers.any(UUID.class), ArgumentMatchers.any(UUID.class)))
+                .thenThrow(new NoSuchElementException("not found"));
+
+        String unknownCardLocation = "/api/v1/board/"+UUID.randomUUID()
+                +"/card/"+UUID.randomUUID();
+        mockMvc.perform(get(unknownCardLocation))
+                .andExpect(status().isNotFound());
+    }
+
 }
