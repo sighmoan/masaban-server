@@ -6,6 +6,7 @@ import com.masagal.masaban_server.model.Card;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
+import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
@@ -117,10 +118,24 @@ class MasabanControllerTest {
     }
 
     @Test
-    void shouldStoreCard() {
+    void shouldDeleteCard() throws Exception {
         // Arrange
         // Act
         // Assert
+        when(boardService.getCardOnBoard(ArgumentMatchers.any(UUID.class), ArgumentMatchers.any(UUID.class))).thenReturn(mockCard);
+
+        String boardLocation = mockMvc.perform(post("/api/v1/board"))
+                .andReturn()
+                .getResponse()
+                .getHeader("location");
+
+        String cardLocation = mockMvc.perform(post(boardLocation+"/card"))
+                .andReturn()
+                .getResponse()
+                .getHeader("location");
+
+        mockMvc.perform(delete(cardLocation))
+                .andExpect(status().isOk());
     }
 
 }
