@@ -54,4 +54,8 @@ public class BoardService {
     public void deleteCardOnBoard(UUID boardId, UUID cardId) {
         getBoard(boardId).deleteCard(cardId);
     }
+
+    public String[] getColumns() {
+        return null;
+    }
 }

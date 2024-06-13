@@ -138,12 +138,13 @@ class BoardTest {
         }
 
         @Test
-        void cannotGetColumnOutOfBounds() {
+        void cannotAddColumnOutOfBounds() {
             //Arrange
-            board.addColumn("First", 0);
+            int numberOfColumns = board.getColumnLabels().length;
             //Act
             //Assert
-            assertThrows(IndexOutOfBoundsException.class, () -> board.addColumn("Second", 3));
+            assertThrows(IndexOutOfBoundsException.class, () ->
+                    board.addColumn("Second", numberOfColumns+1));
         }
     }
 }

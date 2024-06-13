@@ -2,6 +2,7 @@ package com.masagal.masaban_server.domain;
 
 import com.masagal.masaban_server.model.Board;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -20,6 +21,8 @@ class BoardServiceTest {
     void setup() {
         boardService = new BoardService();
         when(mockBoard.getId()).thenReturn(useUuid);
+        when(mockBoard.getColumnLabels())
+                .thenReturn(new String[]{"To-do", "Doing", "Done"});
     }
 
     @Test
@@ -37,5 +40,17 @@ class BoardServiceTest {
         //Act
         //Assert
         assertNotNull(boardService.getBoard(boardId));
+    }
+
+    @Nested
+    public class ColumnServices {
+
+        @Test
+        void canGetColumnLabels() {
+            String[] cols = boardService.getColumns();
+            assertNotNull(cols);
+            assertNotEquals(0, cols.length);
+            assertNotEquals("", cols[cols.length-1]);
+        }
     }
 }
