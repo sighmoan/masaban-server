@@ -65,7 +65,7 @@ public class MvcIntegrationTests {
         String cardLocation = result.getResponse().getHeader("location");
         String cardId = cardLocation.substring(cardLocation.lastIndexOf("/card/")+6);
         //Act
-        String updatedCard = "{\"id\": "+cardId+", \"contents\":\"This is the contents of a card.\"}";
+        String updatedCard = "{\"id\": \""+cardId+"\", \"contents\":\"This is the contents of a card.\"}";
         mockMvc.perform(post(cardLocation).contentType(MediaType.APPLICATION_JSON)
                 .content(updatedCard))
         //Assert
