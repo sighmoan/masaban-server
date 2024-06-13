@@ -74,8 +74,17 @@ class MasabanControllerTest {
     }
 
     @Test
-    void shouldStoreBoardOnRequest() {
+    void shouldCreateCard() throws Exception{
+        String boardLocation = mockMvc.perform(post("/api/v1/board"))
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("location"))
+                .andReturn()
+                .getResponse()
+                .getHeader("location");
 
+        mockMvc.perform(post(boardLocation + "/card"))
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("location"));
     }
 
     @Test
