@@ -45,9 +45,16 @@ class BoardServiceTest {
     @Nested
     public class ColumnServices {
 
+        UUID colsBoardId = UUID.randomUUID();
+
+        @BeforeEach
+        void columnSetup() {
+            colsBoardId = boardService.createBoard();
+        }
+
         @Test
         void canGetColumnLabels() {
-            String[] cols = boardService.getColumns(useUuid);
+            String[] cols = boardService.getColumns(colsBoardId);
             assertNotNull(cols);
             assertNotEquals(0, cols.length);
             assertNotEquals("", cols[cols.length-1]);
