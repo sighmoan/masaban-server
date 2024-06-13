@@ -115,4 +115,23 @@ class BoardTest {
         //Assert
         assertThrows(IndexOutOfBoundsException.class, () -> board.addColumn("Second", 3));
     }
+
+    @Test
+    void canDeleteCardByReference() {
+        //Arrange
+        Card card = board.createCard("hello");
+        //Act
+        //Assert
+        board.deleteCard(card);
+    }
+
+    @Test
+    void canDeleteCardById() {
+        //Arrange
+        Card card = board.createCard("hello");
+        System.out.println("card.id() = " + card.id());
+        //Act
+        //Assert
+        board.deleteCard(card.id());
+    }
 }
