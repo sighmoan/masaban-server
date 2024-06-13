@@ -47,11 +47,13 @@ public class Board {
         Card card = new Card(contents, UUID.randomUUID());
         cards.add(card);
         logger.debug("created card with id {} and contents {}", card.id(), card.text());
+        logger.debug("board with id "+getId());
         return card;
     }
 
     public Card getCardById(UUID cardId) {
-        Optional<Card> result = cards.stream().filter((x) -> x.id() == cardId).findFirst();
+        Optional<Card> result = cards.stream().filter((x) -> x.id().equals(cardId)).findFirst();
+        logger.trace(result.toString());
         if(result.isEmpty()) {
             logger.error("Card requested with id {} does not exist", cardId);
 
