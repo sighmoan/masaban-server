@@ -2,6 +2,7 @@ package com.masagal.masaban_server.http;
 
 import com.masagal.masaban_server.model.Board;
 import com.masagal.masaban_server.domain.BoardService;
+import com.masagal.masaban_server.model.Card;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -15,6 +16,7 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -22,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(MasabanController.class)
 class MasabanControllerTest {
 
+    Card mockCard = mock(Card.class);
     @MockBean
     Board mockBoard;
     @MockBean
@@ -40,6 +43,11 @@ class MasabanControllerTest {
                 .thenReturn(useBoardUuid);
         when(boardService.createCardOnBoard(ArgumentMatchers.any(UUID.class)))
                 .thenReturn(useCardUuid);
+
+        when(mockCard.id())
+                .thenReturn(UUID.randomUUID());
+        when(mockCard.text())
+                .thenReturn("card contents");
     }
 
     @Test
@@ -85,6 +93,27 @@ class MasabanControllerTest {
         mockMvc.perform(post(boardLocation + "/card"))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("location"));
+    }
+
+    @Test
+    void shouldGetCard() throws Exception {
+
+        when(boardService.getCardOnBoard(ArgumentMatchers.any(UUID.class), ArgumentMatchers.any(UUID.class))).thenReturn(mockCard);
+
+        String boardLocation = mockMvc.perform(post("/api/v1/board"))
+                .andReturn()
+                .getResponse()
+                .getHeader("location");
+
+        String cardLocation = mockMvc.perform(post(boardLocation+"/card"))
+                .andReturn()
+                .getResponse()
+                .getHeader("location");
+
+        mockMvc.perform(get(cardLocation))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(content().string(not(emptyString())));
     }
 
     @Test
