@@ -26,6 +26,10 @@ public class Board {
         cards = new ArrayList<Card>();
         this.id = UUID.randomUUID();
         columns = new ArrayList<>();
+
+        columns.add(new Column("To-do", new ArrayList<>()));
+        columns.add(new Column("Doing", new ArrayList<>()));
+        columns.add(new Column("Done", new ArrayList<>()));
     }
 
     public void add(Card newCard) {
@@ -89,7 +93,7 @@ public class Board {
     }
 
     public String[] getColumnLabels() {
-        return null;
+        return columns.stream().map(Column::name).toArray(String[]::new);
     }
 
     public String getColumnLabel(int index) {
