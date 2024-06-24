@@ -17,7 +17,7 @@ import java.net.URISyntaxException;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(exposedHeaders = "Location")
 @RequestMapping(MasabanController.API_ROOT)
 @Tag(name = "Main Board interface", description = "Primary interface for CRUD'ing masaban boards.")
 public class MasabanController {
