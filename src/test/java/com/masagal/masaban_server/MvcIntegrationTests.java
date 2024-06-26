@@ -118,11 +118,6 @@ public class MvcIntegrationTests {
     }
 
     @Test
-    void canGetCardsInColumn() throws Exception {
-        fail();
-    }
-
-    @Test
     void canInsertColumn() throws Exception {
         String boardLocation = setUpBoard();
         mockMvc.perform(post(boardLocation + "/column/1")
