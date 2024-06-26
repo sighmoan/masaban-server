@@ -66,4 +66,8 @@ public class BoardService {
     public void insertColumn(UUID boardId, int columnIndex, String text) {
         getBoard(boardId).addColumn(text, columnIndex);
     }
+
+    public void deleteColumn(UUID boardId, int columnIndex) {
+
+    }
 }

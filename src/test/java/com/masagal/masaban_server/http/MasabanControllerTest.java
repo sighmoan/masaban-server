@@ -197,6 +197,12 @@ class MasabanControllerTest {
                                 .content("New column name"))
                     .andExpect(status().isOk());
         }
+
+        @Test
+        void shouldDeleteColumn() throws Exception {
+            mockMvc.perform(delete(boardLocation + "/column/1"))
+                    .andExpect(status().isOk());
+        }
     }
 
 }

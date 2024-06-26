@@ -109,4 +109,12 @@ public class MasabanController {
         service.renameColumn(boardId, columnIndex, newColumnName);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/{boardId}/column/{columnIndex}")
+    @Tag(name = "Delete the specified column")
+    public ResponseEntity<Void> deleteColumn(@PathVariable @Valid UUID boardId,
+                                             @PathVariable int columnIndex) {
+        service.deleteColumn(boardId, columnIndex);
+        return ResponseEntity.ok().build();
+    }
 }
