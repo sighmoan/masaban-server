@@ -3,6 +3,7 @@ package com.masagal.masaban_server.model;
 import jakarta.persistence.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -15,12 +16,12 @@ public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private final UUID id;
+    @Transient
     private final Logger logger = LogManager.getLogger();
 
-    private int assignedCardIds = 0;
 
     @OneToMany
-    private final ArrayList<Column> columns;
+    private List<Column> columns;
 
 
     public Board() {
@@ -29,12 +30,6 @@ public class Board {
     }
     public Board(UUID id) {
         this.id = id;
-
-        columns = new ArrayList<>();
-
-        columns.add(new Column(new ArrayList<>(), "To-do"));
-        columns.add(new Column(new ArrayList<>(), "Doing"));
-        columns.add(new Column(new ArrayList<>(), "Done"));
 
     }
 
@@ -46,8 +41,12 @@ public class Board {
         columns.getFirst().add(card);
     }
 
-    public List<Card> getCards() {
-        return columns.stream().flatMap((column) -> column.cards.stream()).toList();
+    public List<Column> getColumns() {
+        return this.columns;
+    }
+
+    public void setColumns(ArrayList<Column> columns) {
+        this.columns = columns;
     }
 
 
