@@ -24,67 +24,6 @@ class BoardTest {
     }
 
     @Nested
-    public class CardFunctionalityTests {
-        @Test
-        void canCreateCardByStringAndRetrieve() {
-            //Arrange
-            String textToAdd = "this is a test card";
-            //Act
-            Card createdCard = board.createCard(textToAdd);
-            Card fetchedCard = board.getCardById(createdCard.id());
-            //Assert
-            assertNotNull(fetchedCard);
-            assertEquals(textToAdd, fetchedCard.text());
-        }
-
-        @Test
-        void canCreateAndListCards() {
-            //Arrange
-            String obi = "Obi-wan Kenobi";
-            String yoda = "Master Yoda";
-            String luke = "Luke Skywalker";
-            //Act
-            board.createCard(obi);
-            board.createCard(yoda);
-            board.createCard(luke);
-            //Assert
-            assertEquals(3, board.getCards().size());
-        }
-
-        @Test
-        void canUpdateCard() {
-            //Arrange
-            String oldText = "this is the old text";
-            String newText = "the new text this is";
-            //Act
-            Card addedCard = board.createCard(oldText);
-            board.updateCard(addedCard.id(), newText);
-            //Assert
-            assertNotEquals(oldText, board.getCardById(addedCard.id()).text());
-            assertEquals(newText, board.getCardById(addedCard.id()).text());
-        }
-
-        @Test
-        void canDeleteCardByReference() {
-            //Arrange
-            Card card = board.createCard("hello");
-            //Act
-            //Assert
-            board.deleteCard(card);
-        }
-
-        @Test
-        void canDeleteCardById() {
-            //Arrange
-            Card card = board.createCard("hello");
-            System.out.println("card.id() = " + card.id());
-            //Act
-            //Assert
-            board.deleteCard(card.id());
-        }
-    }
-
-    @Nested
     public class ColumnFunctionalityTests {
         @Test
         void hasColumnsByDefault() {

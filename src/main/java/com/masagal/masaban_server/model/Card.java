@@ -1,8 +1,44 @@
 package com.masagal.masaban_server.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 import java.util.UUID;
 
-public record Card (@JsonProperty("contents") String text, UUID id) {
+@Entity
+public class Card {
+    @JsonProperty("contents")
+    String text;
+    @Id
+    UUID id;
+
+    public Card() {
+        this("");
+    }
+
+    public Card(String text) {
+        this(text, UUID.randomUUID());
+    }
+
+    public Card(String text, UUID id) {
+        this.text = text;
+        this.id = id;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 }
