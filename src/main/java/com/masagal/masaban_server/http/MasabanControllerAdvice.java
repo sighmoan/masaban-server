@@ -19,7 +19,7 @@ public class MasabanControllerAdvice {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ResponseEntity<Void> handleInvalidTypes(MethodArgumentTypeMismatchException ex) {
-        logger.error("got exception of type MethodArgumentTypeMismatchException", ex.getMessage());
+        logger.error("got exception of type MethodArgumentTypeMismatchException: {}", ex.getMessage());
         return ResponseEntity.badRequest().build();
     }
 
@@ -27,6 +27,12 @@ public class MasabanControllerAdvice {
     protected ResponseEntity<Void> handleNotFound(Exception ex) {
         logger.error(ex.getMessage());
         return ResponseEntity.notFound().build();
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    protected ResponseEntity<Void> handleInvalidInput(IllegalArgumentException ex) {
+        logger.error("got exception of type IllegalArgumentException: {}", ex.getMessage());
+        return ResponseEntity.badRequest().build();
     }
 
 }

@@ -7,10 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class BoardService {
@@ -78,7 +75,7 @@ public class BoardService {
     }
 
     public List<Column> getColumns(UUID boardId) {
-        return getBoard(boardId).getColumns();
+        return getBoard(boardId).getColumns().stream().sorted(Comparator.comparingInt(Column::getIndex)).toList();
     }
 
     public void renameColumn(UUID boardId, UUID columnId, String newText) {
@@ -111,7 +108,18 @@ public class BoardService {
         logger.info("delete {} complete", columnId);
     }
 
+    @Transactional
     public void moveColumn(UUID boardId, UUID columnId, Integer index) {
+        Column col = columnRepo.findById(columnId).orElseThrow();
+        if(index == null) {
+            logger.warn("new column index set to null. Setting unchanged");
+            index = col.getIndex();
+        }
+        col.setIndex(index);
+        columnRepo.save(col);
+        // ?????
+        Board board = boardRepo.findById(boardId).orElseThrow();
+        boardRepo.save(board);
     }
 
     public Column getColumnById(UUID columnId) {

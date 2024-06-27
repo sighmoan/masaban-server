@@ -114,7 +114,7 @@ public class MasabanController {
     @Tag(name = "Update the specified column")
     public ResponseEntity<Void> updateColumn(@PathVariable @Valid UUID boardId,
                                              @PathVariable @Valid UUID columnId,
-                                             @RequestBody ColumnUpdateRequestDto dto) {
+                                             @RequestBody @Valid ColumnUpdateRequestDto dto) {
         service.renameColumn(boardId, columnId, dto.label());
         service.moveColumn(boardId, columnId, dto.index());
         return ResponseEntity.ok().build();
