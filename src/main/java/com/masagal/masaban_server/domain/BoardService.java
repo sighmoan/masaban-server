@@ -103,7 +103,9 @@ public class BoardService {
     }
 
     public void deleteColumn(UUID boardId, UUID columnId) {
-
+        boardRepo.findById(boardId).orElseThrow()
+                        .removeColumn(columnRepo.findById(columnId).orElseThrow());
+        columnRepo.deleteById(columnId);
     }
 
     public void moveColumn(UUID boardId, UUID columnId, Integer index) {

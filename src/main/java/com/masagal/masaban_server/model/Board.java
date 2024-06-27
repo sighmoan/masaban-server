@@ -121,7 +121,7 @@ public class Board {
         return removeColumn(oldColumn);
     }
 
-    private Board removeColumn(Column column) {
+    public Board removeColumn(Column column) {
         columns.remove(column);
         return this;
     }
