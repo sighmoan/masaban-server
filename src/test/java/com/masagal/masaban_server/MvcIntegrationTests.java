@@ -11,11 +11,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.result.JsonPathResultMatchers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -124,6 +125,21 @@ public class MvcIntegrationTests {
                     .andExpect(status().isOk())
                     .andExpect(MockMvcResultMatchers
                             .jsonPath("$.label", containsString("Variation")));
+        }
+
+        @Test
+        void canDeleteColumn() throws Exception {
+            // Arrange
+            String boardLocation = createBoard();
+            String columnLocation = createColumn(boardLocation, 1, "Expectation");
+            // Act
+            mockMvc.perform(delete(columnLocation));
+            // Assert
+            mockMvc.perform(get(columnLocation))
+                    .andExpect(status().isNotFound());
+            mockMvc.perform(get(boardLocation + "/columns"))
+                    .andExpect(status().isOk());
+
         }
     }
 
