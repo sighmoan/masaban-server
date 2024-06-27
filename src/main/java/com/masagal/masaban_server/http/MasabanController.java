@@ -15,6 +15,7 @@ import org.springframework.web.client.HttpServerErrorException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -89,7 +90,7 @@ public class MasabanController {
 
     @GetMapping("/{boardId}/columns")
     @Tag(name = "Get all columns")
-    public ResponseEntity<String[]> getColumns(@PathVariable @Valid UUID boardId) {
+    public ResponseEntity<List<Column>> getColumns(@PathVariable @Valid UUID boardId) {
         return ResponseEntity.ok(service.getColumns(boardId));
     }
 

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -76,11 +77,8 @@ public class BoardService {
         getBoard(boardId).deleteCard(cardId);
     }
 
-    public String[] getColumns(UUID boardId) {
-        return getBoard(boardId).getColumns()
-                .stream()
-                .map(Column::getLabel)
-                .toArray(String[]::new);
+    public List<Column> getColumns(UUID boardId) {
+        return getBoard(boardId).getColumns();
     }
 
     public void renameColumn(UUID boardId, UUID columnId, String newText) {

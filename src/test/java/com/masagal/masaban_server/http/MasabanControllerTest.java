@@ -44,8 +44,8 @@ class MasabanControllerTest {
                 .thenReturn(useBoardUuid);
         when(boardService.createCardOnBoard(ArgumentMatchers.any(UUID.class)))
                 .thenReturn(useCardUuid);
-        when(boardService.getColumns(ArgumentMatchers.any(UUID.class)))
-                .thenReturn(new String[]{"To-do", "Doing", "Done"});
+        //when(boardService.getColumns(ArgumentMatchers.any(UUID.class)))
+          //      .thenReturn(new String[]{"To-do", "Doing", "Done"});
 
         when(mockCard.getId())
                 .thenReturn(UUID.randomUUID());
