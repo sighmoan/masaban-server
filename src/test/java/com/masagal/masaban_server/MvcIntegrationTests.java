@@ -106,7 +106,7 @@ public class MvcIntegrationTests {
             mockMvc.perform(get(boardLocation + "/columns"))
                     .andExpect(status().isOk())
                     .andExpect(MockMvcResultMatchers
-                            .jsonPath("$[0]", containsString("Insistence")));
+                            .jsonPath("$.[0].label", containsString("Insistence")));
 
         }
 
