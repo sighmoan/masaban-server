@@ -13,16 +13,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class BoardTest {
     Board board = new Board();
 
-    @Test
-    void shouldGenerateUniqueId() {
-        // Arrange
-        // Act
-        Board firstBoard = new Board();
-        Board secondBoard = new Board();
-        // Assert
-        assertNotEquals(firstBoard.getId(), secondBoard.getId());
-    }
-
     @Nested
     public class ColumnFunctionalityTests {
         @Test

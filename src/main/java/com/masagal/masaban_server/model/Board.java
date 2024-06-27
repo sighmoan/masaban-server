@@ -15,7 +15,7 @@ import java.util.UUID;
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private final UUID id;
+    private UUID id;
     @Transient
     private final Logger logger = LogManager.getLogger();
 
@@ -25,17 +25,12 @@ public class Board {
 
 
     public Board() {
-        this(UUID.randomUUID());
-
-    }
-    public Board(UUID id) {
-        this.id = id;
-
     }
 
     public UUID getId() {
         return this.id;
     }
+    public void setId(UUID id) { this.id = id; }
 
     public void add(Card card) {
         columns.getFirst().add(card);
@@ -115,6 +110,11 @@ public class Board {
         return addColumn(text, location, new ArrayList<Card>());
     }
 
+    public Board addColumn(Column col) {
+        columns.add(col);
+        return this;
+    }
+
     public Board renameColumn(String newText, int location) {
         Column oldColumn = getColumn(location);
         //addColumn(newText, location, oldColumn.cardArray());
@@ -137,5 +137,15 @@ public class Board {
 
     public void moveCardToColumn(Card cardToMove, int columnNumber) {
         //getColumn(columnNumber).cardArray().add(cardToMove);
+    }
+
+    public void addColumnAtIndex(Column col, int columnIndex) {
+        /*
+
+        HERE IS A BAD HACK
+        DO NOT FUCK AROUND WITH THE INDEX LIKE THAT
+
+         */
+        this.columns.add(0, col);
     }
 }

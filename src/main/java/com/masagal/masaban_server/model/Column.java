@@ -12,8 +12,17 @@ public class Column {
     @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
     @OneToMany
-    ArrayList<Card> cards;
+    List<Card> cards;
+    Integer index;
     String label;
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
 
     public Column(ArrayList<Card> cards, String label) {
         this.cards = cards;

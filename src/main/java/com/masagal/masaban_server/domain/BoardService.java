@@ -7,36 +7,39 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Service
 public class BoardService {
     Logger logger = LogManager.getLogger();
-    @Autowired
-    BoardRepository repo;
-    @Autowired
+    BoardRepository boardRepo;
     ColumnRepository columnRepo;
-    @Autowired
     CardRepository cardRepo;
+
     @Autowired
-    private BoardRepository boardRepository;
+    public BoardService(BoardRepository repo, ColumnRepository columnRepo, CardRepository cardRepo) {
+        this.boardRepo = repo;
+        this.columnRepo = columnRepo;
+        this.cardRepo = cardRepo;
+    }
 
     public UUID createBoard() {
-        Board board = new Board(UUID.randomUUID());
-        repo.save(board);
-        return board.getId();
+        Board board = new Board();
+        Board newBoard = boardRepo.save(board);
+        logger.info("created and saved board with id {}", newBoard.getId());
+        return newBoard.getId();
     }
 
     public Board addBoard(Board board) {
-        repo.save(board);
+        boardRepo.save(board);
         return board;
     }
 
     public Board getBoard(UUID id) {
         logger.debug("fetching board with id {}", id);
-        Board foundBoard = repo.findById(id).orElseThrow(() -> {
+        Board foundBoard = boardRepo.findById(id).orElseThrow(() -> {
             logger.warn("board with id {} could not be found", id);
             return new NoSuchElementException("could not find board with id "+id);
         });
@@ -74,18 +77,39 @@ public class BoardService {
     }
 
     public String[] getColumns(UUID boardId) {
-        return getBoard(boardId).getColumnLabels();
+        return getBoard(boardId).getColumns()
+                .stream()
+                .map(Column::getLabel)
+                .toArray(String[]::new);
     }
 
-    public void renameColumn(UUID boardId, int columnIndex, String newText) {
-        getBoard(boardId).renameColumn(newText, columnIndex);
+    public void renameColumn(UUID boardId, UUID columnId, String newText) {
+        Column col = columnRepo.findById(columnId).orElseThrow();
+        col.setLabel(newText);
+        columnRepo.save(col);
     }
 
-    public void insertColumn(UUID boardId, int columnIndex, String text) {
-        getBoard(boardId).addColumn(text, columnIndex);
+    public UUID insertColumn(UUID boardId, int columnIndex, String text) {
+        logger.info("creating column on board id {} with index {}", boardId, columnIndex);
+        Column col = new Column(new ArrayList<>(), text);
+        col.setIndex(columnIndex);
+
+        Board board = getBoard(boardId);
+        board.addColumn(col);
+        columnRepo.save(col);
+        boardRepo.save(board);
+
+        return col.getId();
     }
 
-    public void deleteColumn(UUID boardId, int columnIndex) {
+    public void deleteColumn(UUID boardId, UUID columnId) {
 
+    }
+
+    public void moveColumn(UUID boardId, UUID columnId, Integer index) {
+    }
+
+    public Column getColumnById(UUID columnId) {
+        return columnRepo.findById(columnId).orElseThrow();
     }
 }

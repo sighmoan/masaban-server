@@ -3,6 +3,7 @@ package com.masagal.masaban_server.http;
 import com.masagal.masaban_server.domain.BoardService;
 import com.masagal.masaban_server.model.Board;
 import com.masagal.masaban_server.model.Card;
+import com.masagal.masaban_server.model.Column;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
@@ -87,34 +88,42 @@ public class MasabanController {
     }
 
     @GetMapping("/{boardId}/columns")
+    @Tag(name = "Get all columns")
     public ResponseEntity<String[]> getColumns(@PathVariable @Valid UUID boardId) {
         return ResponseEntity.ok(service.getColumns(boardId));
     }
 
-    @PostMapping("/{boardId}/column/{columnIndex}")
-    @Tag(name = "Insert a new column at the specified index")
+    @GetMapping("/{boardId}/columns/{columnId}")
+    @Tag(name="Get a specific column")
+    public ResponseEntity<Column> getColumn(@PathVariable @Valid UUID boardId,
+                                            @PathVariable @Valid UUID columnId) {
+        return ResponseEntity.ok(service.getColumnById(columnId));
+    }
+
+    @PostMapping("/{boardId}/columns")
+    @Tag(name = "Insert a new column")
     public ResponseEntity<Void> writeColumn(@PathVariable @Valid UUID boardId,
-                                            @PathVariable int columnIndex,
-                                            @RequestBody String newColumnName) {
-        service.insertColumn(boardId, columnIndex, newColumnName);
-        URI location = createRelativeApiUri(boardId.toString(), "column", Integer.toString(columnIndex));
+                                            @RequestBody ColumnUpdateRequestDto dto) {
+        UUID columnId = service.insertColumn(boardId, dto.index(), dto.label());
+        URI location = createRelativeApiUri(boardId.toString(), "columns", columnId.toString());
         return ResponseEntity.created(location).build();
     }
 
-    @PutMapping("/{boardId}/column/{columnIndex}")
-    @Tag(name = "Rename the specified column")
-    public ResponseEntity<Void> renameColumn(@PathVariable @Valid UUID boardId,
-                                             @PathVariable int columnIndex,
-                                             @RequestBody String newColumnName) {
-        service.renameColumn(boardId, columnIndex, newColumnName);
+    @PutMapping("/{boardId}/columns/{columnId}")
+    @Tag(name = "Update the specified column")
+    public ResponseEntity<Void> updateColumn(@PathVariable @Valid UUID boardId,
+                                             @PathVariable @Valid UUID columnId,
+                                             @RequestBody ColumnUpdateRequestDto dto) {
+        service.renameColumn(boardId, columnId, dto.label());
+        service.moveColumn(boardId, columnId, dto.index());
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{boardId}/column/{columnIndex}")
+    @DeleteMapping("/{boardId}/columns/{columnId}")
     @Tag(name = "Delete the specified column")
     public ResponseEntity<Void> deleteColumn(@PathVariable @Valid UUID boardId,
-                                             @PathVariable int columnIndex) {
-        service.deleteColumn(boardId, columnIndex);
+                                             @PathVariable @Valid UUID columnId) {
+        service.deleteColumn(boardId, columnId);
         return ResponseEntity.ok().build();
     }
 }

@@ -1,6 +1,9 @@
 package com.masagal.masaban_server.domain;
 
 import com.masagal.masaban_server.model.Board;
+import com.masagal.masaban_server.model.BoardRepository;
+import com.masagal.masaban_server.model.CardRepository;
+import com.masagal.masaban_server.model.ColumnRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,7 +22,7 @@ class BoardServiceTest {
 
     @BeforeEach
     void setup() {
-        boardService = new BoardService();
+        boardService = new BoardService(mock(BoardRepository.class), mock(ColumnRepository.class), mock(CardRepository.class));
         when(mockBoard.getId()).thenReturn(useUuid);
         when(mockBoard.getColumnLabels())
                 .thenReturn(new String[]{"To-do", "Doing", "Done"});

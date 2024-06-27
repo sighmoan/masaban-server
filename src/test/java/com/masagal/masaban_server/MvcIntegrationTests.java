@@ -1,5 +1,8 @@
 package com.masagal.masaban_server;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.masagal.masaban_server.http.ColumnUpdateRequestDto;
+import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +45,16 @@ public class MvcIntegrationTests {
     }
 
     String createColumn(String boardLocation) throws Exception {
-        return mockMvc.perform(post(boardLocation+"/column"))
+        return createColumn(boardLocation, 1, "To-do");
+    }
+
+    String createColumn(String boardLocation, Integer index, String text) throws Exception {
+        ColumnUpdateRequestDto dto = new ColumnUpdateRequestDto(text, index);
+        ObjectMapper om = new ObjectMapper();
+        return mockMvc.perform(
+                    post(boardLocation+"/columns")
+                            .contentType("application/json")
+                            .content(om.writeValueAsString(dto)))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("location"))
                 .andReturn()
@@ -76,34 +88,42 @@ public class MvcIntegrationTests {
         void canGetColumns() throws Exception {
             //Arrange
             String boardLocation = setUpBoard();
+            createColumn(boardLocation, 1, "Idea bucket");
+            createColumn(boardLocation, 2, "Doing");
+            createColumn(boardLocation, 3, "Done");
+
+
             mockMvc.perform(get(boardLocation + "/columns"))
                     .andExpect(status().isOk())
-                    .andExpect(MockMvcResultMatchers.jsonPath("length()", is(3)));
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.length()", is(3)));
         }
 
         @Test
         void canInsertColumn() throws Exception {
             String boardLocation = setUpBoard();
-            mockMvc.perform(post(boardLocation + "/column/1")
-                            .content("New column name"))
-                    .andExpect(status().isCreated());
+            createColumn(boardLocation, 1,"Insistence");
             mockMvc.perform(get(boardLocation + "/columns"))
                     .andExpect(status().isOk())
                     .andExpect(MockMvcResultMatchers
-                            .jsonPath("$.[1]", containsString("New column name")));
+                            .jsonPath("$[0]", containsString("Insistence")));
 
         }
 
         @Test
         void canRenameColumn() throws Exception {
-            String boardLocation = setUpBoard();
-            mockMvc.perform(put(boardLocation + "/column/1")
-                            .content("New column name"))
+            String columnLocation = createColumn(createBoard());
+
+            ColumnUpdateRequestDto dto = new ColumnUpdateRequestDto("Variation", -1);
+            ObjectMapper om = new ObjectMapper();
+
+            mockMvc.perform(put(columnLocation)
+                            .contentType("application/json")
+                            .content(om.writeValueAsString(dto)))
                     .andExpect(status().isOk());
-            mockMvc.perform(get(boardLocation + "/columns"))
+            mockMvc.perform(get(columnLocation))
                     .andExpect(status().isOk())
                     .andExpect(MockMvcResultMatchers
-                            .jsonPath("$.[1]", containsString("New column name")));
+                            .jsonPath("$.label", containsString("Variation")));
         }
     }
 
@@ -178,14 +198,14 @@ public class MvcIntegrationTests {
         }
 
         @Test
-        void should404IfColumnIndexInvalid() throws Exception {
+        void should400IfColumnIndexInvalid() throws Exception {
             String boardLocation = setUpBoard();
             mockMvc.perform(post(boardLocation + "/column/403")
                             .content("New column name"))
-                    .andExpect(status().isNotFound());
+                    .andExpect(status().isBadRequest());
             mockMvc.perform(put(boardLocation + "/column/403")
                             .content("New column name"))
-                    .andExpect(status().isNotFound());
+                    .andExpect(status().isBadRequest());
         }
 
         @Test
