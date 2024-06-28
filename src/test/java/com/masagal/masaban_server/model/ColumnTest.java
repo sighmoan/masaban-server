@@ -22,7 +22,7 @@ public class ColumnTest {
     void canCreateCardByStringAndRetrieve() {
         //Arrange
         String textToAdd = "this is a test card";
-        Card createdCard = new Card(textToAdd, UUID.randomUUID());
+        Card createdCard = new Card(textToAdd);
         //Act
         column.add(createdCard);
         var cards = column.getCards();
@@ -34,9 +34,9 @@ public class ColumnTest {
     @Test
     void canCreateAndListCards() {
         //Arrange
-        Card obi = new Card("Obi-wan Kenobi", UUID.randomUUID());
-        Card yoda = new Card("Master Yoda", UUID.randomUUID());
-        Card luke = new Card("Luke Skywalker", UUID.randomUUID());
+        Card obi = new Card("Obi-wan Kenobi");
+        Card yoda = new Card("Master Yoda");
+        Card luke = new Card("Luke Skywalker");
         //Act
         column.add(obi);
         column.add(yoda);
@@ -48,7 +48,7 @@ public class ColumnTest {
     @Test
     void canUpdateCard() {
         //Arrange
-        Card card = new Card("this is the old text", UUID.randomUUID());
+        Card card = new Card("this is the old text");
         String newText = "the new text this is";
         //Act
         column.add(card);

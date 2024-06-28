@@ -5,8 +5,10 @@ import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
+import javax.management.InstanceNotFoundException;
 import java.util.*;
 
 @Service
@@ -45,20 +47,26 @@ public class BoardService {
         return foundBoard;
     }
 
+    @Transactional
     public UUID createCardOnBoard(UUID boardId) {
-        Board board = getBoard(boardId);
-        Card newCard = board.createCard("");
-        return newCard.getId();
+        Board board = boardRepo.findById(boardId).orElseThrow();
+        Column col = board.getColumns().getFirst();
+        return createCardOnColumn(boardId, col.getId());
     }
 
     @Transactional
     public UUID createCardOnColumn(UUID boardId, UUID columnId) {
-        Card newCard = new Card("", UUID.randomUUID());
+        Card newCard = new Card("");
         Column col = columnRepo.findById(columnId).orElseThrow();
+        cardRepo.save(newCard);
+
         col.add(newCard);
         columnRepo.save(col);
-        cardRepo.save(newCard);
         return newCard.getId();
+    }
+
+    public List<Card> getCardsByColumn(UUID columnId) {
+        return columnRepo.findById(columnId).orElseThrow(NoSuchElementException::new).getCards();
     }
 
     public Card getCardOnBoard(UUID boardId, UUID cardId) {

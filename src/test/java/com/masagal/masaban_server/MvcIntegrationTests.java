@@ -173,20 +173,32 @@ public class MvcIntegrationTests {
             String columnLocation = createColumn(location);
             //Act
             //Assert
-            mockMvc.perform(post(columnLocation + "/card"))
+            mockMvc.perform(post(columnLocation + "/cards"))
                     .andExpect(status().isCreated())
                     .andExpect(header().exists("location"));
+        }
+
+        @Test
+        void canGetCardsByColumn() throws Exception {
+            String columnLocation = createColumn(createBoard());
+            String cardLocation = mockMvc.perform(post(columnLocation + "/cards"))
+                    .andExpect(status().isCreated())
+                    .andReturn()
+                    .getResponse()
+                    .getHeader("location");
+            mockMvc.perform(get(columnLocation + "/cards"))
+                    .andExpect(status().isOk());
         }
 
         @Test
         void canUpdateContentOfCard() throws Exception {
             //Arrange
             String columnLocation = createColumn(createBoard());
-            MvcResult result = mockMvc.perform(post(columnLocation + "/card"))
+            MvcResult result = mockMvc.perform(post(columnLocation + "/cards"))
                     .andExpect(status().is2xxSuccessful())
                     .andReturn();
             String cardLocation = result.getResponse().getHeader("location");
-            String cardId = cardLocation.substring(cardLocation.lastIndexOf("/card/") + 6);
+            String cardId = cardLocation.substring(cardLocation.lastIndexOf("/cards/") + 6);
             //Act
             String updatedCard = "{\"id\": \"" + cardId + "\", \"contents\":\"This is the contents of a card.\"}";
             mockMvc.perform(post(cardLocation).contentType(MediaType.APPLICATION_JSON)
@@ -204,7 +216,7 @@ public class MvcIntegrationTests {
         void canDeleteCard() throws Exception {
             //Arrange
             String boardLocation = setUpBoard();
-            MvcResult result = mockMvc.perform(post(boardLocation + "/card"))
+            MvcResult result = mockMvc.perform(post(boardLocation + "/cards"))
                     .andExpect(status().is2xxSuccessful())
                     .andReturn();
             String cardLocation = result.getResponse().getHeader("location");

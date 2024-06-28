@@ -1,6 +1,7 @@
 package com.masagal.masaban_server.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ public class Column {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     List<Card> cards;
     Integer index;
     String label;

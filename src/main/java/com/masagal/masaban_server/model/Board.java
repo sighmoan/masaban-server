@@ -20,7 +20,7 @@ public class Board {
     private final Logger logger = LogManager.getLogger();
 
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Column> columns;
 
 
@@ -46,7 +46,7 @@ public class Board {
 
 
     public Card createCard(String contents) {
-        Card card = new Card(contents, UUID.randomUUID());
+        Card card = new Card(contents);
         add(card);
         logger.debug("created card with id {} and contents {}", card.getId(), card.getText());
         logger.debug("board with id "+getId());

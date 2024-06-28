@@ -76,7 +76,7 @@ public class MasabanController {
 
     @PostMapping("/{boardId}/card/{cardId}")
     public ResponseEntity<Card> updateCard(@PathVariable @Valid UUID boardId, @PathVariable @Valid UUID cardId, @RequestBody CardUpdateRequestDto reqDto) {
-        service.updateCardOnBoard(boardId, cardId, reqDto.toCard(cardId));
+        service.updateCardOnBoard(boardId, cardId, reqDto.toCard());
 
         return ResponseEntity.ok().build();
     }
@@ -126,5 +126,19 @@ public class MasabanController {
                                              @PathVariable @Valid UUID columnId) {
         service.deleteColumn(boardId, columnId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{boardId}/columns/{columnId}/cards")
+    public ResponseEntity<List<Card>> getCardsByColumn(@PathVariable @Valid UUID boardId,
+                                                       @PathVariable @Valid UUID columnId) {
+        return ResponseEntity.ok(service.getCardsByColumn(columnId));
+    }
+
+    @PostMapping("/{boardId}/columns/{columnId}/cards")
+    public ResponseEntity<Void> insertCardOnColumn(@PathVariable @Valid UUID boardId,
+                                                   @PathVariable @Valid UUID columnId) {
+        UUID newCardId = service.createCardOnColumn(boardId, columnId);
+        URI location = createRelativeApiUri(boardId.toString(), "columns", columnId.toString(), "cards", newCardId.toString());
+        return ResponseEntity.created(location).build();
     }
 }

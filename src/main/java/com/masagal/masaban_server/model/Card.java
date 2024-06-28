@@ -2,6 +2,8 @@ package com.masagal.masaban_server.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.util.UUID;
@@ -11,6 +13,7 @@ public class Card {
     @JsonProperty("contents")
     String text;
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
 
     public Card() {
@@ -18,12 +21,7 @@ public class Card {
     }
 
     public Card(String text) {
-        this(text, UUID.randomUUID());
-    }
-
-    public Card(String text, UUID id) {
         this.text = text;
-        this.id = id;
     }
 
     public String getText() {
