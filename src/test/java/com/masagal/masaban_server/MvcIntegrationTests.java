@@ -141,6 +141,26 @@ public class MvcIntegrationTests {
                     .andExpect(status().isOk());
 
         }
+
+        @Test
+        void canMoveColumn() throws Exception {
+            // Arrange
+            String boardLocation = createBoard();
+            createColumn(boardLocation, 0, "To do");
+            createColumn(boardLocation, 1, "Doing");
+            String columnLocation = createColumn(boardLocation, 2, "Idea box");
+            // Act
+            ColumnUpdateRequestDto dto = new ColumnUpdateRequestDto("Idea box", -1);
+            ObjectMapper om = new ObjectMapper();
+            mockMvc.perform(put(columnLocation)
+                    .content(om.writeValueAsString(dto))
+                    .contentType("application/json"))
+                    .andExpect(status().isOk());
+            // Assert
+            mockMvc.perform(get(boardLocation + "/columns"))
+                    .andExpect(status().isOk())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].label", containsString("Idea box")));
+        }
     }
 
     @Nested

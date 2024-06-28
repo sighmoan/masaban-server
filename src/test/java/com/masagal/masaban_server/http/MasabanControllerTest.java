@@ -175,7 +175,7 @@ class MasabanControllerTest {
         }
 
         @Test
-        void shouldGetColumnLabels() throws Exception {
+        void shouldGetColumns() throws Exception {
 
             String[] columns;
 
@@ -186,21 +186,21 @@ class MasabanControllerTest {
 
         @Test
         void shouldInsertNewColumn() throws Exception {
-            mockMvc.perform(post(boardLocation + "/column/1")
+            mockMvc.perform(post(boardLocation + "/columns/1")
                             .content("New column name"))
                     .andExpect(status().isCreated());
         }
 
         @Test
         void shouldRenameColumn() throws Exception {
-            mockMvc.perform(put(boardLocation + "/column/1")
+            mockMvc.perform(put(boardLocation + "/columns/1")
                                 .content("New column name"))
                     .andExpect(status().isOk());
         }
 
         @Test
         void shouldDeleteColumn() throws Exception {
-            mockMvc.perform(delete(boardLocation + "/column/1"))
+            mockMvc.perform(delete(boardLocation + "/columns/1"))
                     .andExpect(status().isOk());
         }
     }

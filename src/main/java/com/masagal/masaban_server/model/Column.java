@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Table(name="masabancolumn")
 public class Column {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
