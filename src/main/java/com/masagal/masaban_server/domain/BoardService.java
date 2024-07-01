@@ -74,8 +74,9 @@ public class BoardService {
     }
 
     public void updateCardOnBoard(UUID boardId, UUID cardId, Card updatedCard) {
-        getBoard(boardId).deleteCard(cardId);
-        getBoard(boardId).add(updatedCard);
+        Card card = cardRepo.findById(cardId).orElseThrow(NoSuchElementException::new);
+        card.setText(updatedCard.getText());
+        cardRepo.save(card);
     }
 
     public void deleteCardOnBoard(UUID boardId, UUID cardId) {
@@ -132,5 +133,12 @@ public class BoardService {
 
     public Column getColumnById(UUID columnId) {
         return columnRepo.findById(columnId).orElseThrow();
+    }
+
+    public void moveCard(UUID cardId, UUID newColumnId) {
+        Card cardToMove = cardRepo.findById(cardId).orElseThrow(NoSuchElementException::new);
+
+        columnRepo.findByCardsContaining(List.of(cardToMove)).removeCard(cardToMove);
+        columnRepo.findById(newColumnId).orElseThrow().add(cardToMove);
     }
 }
