@@ -81,6 +81,12 @@ public class MasabanController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/{boardId}/columns/{columnId}/cards/{cardId}")
+    public ResponseEntity<Void> updatedCard(@PathVariable @Valid UUID boardId, @PathVariable @Valid UUID columnId, @Valid UUID cardId, @RequestBody CardUpdateRequestDto reqDto) {
+        service.updateCardOnBoard(boardId, cardId, reqDto.toCard());
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/{boardId}/card/{cardId}")
     public ResponseEntity<Card> deleteCard(@PathVariable @Valid UUID boardId, @PathVariable @Valid UUID cardId) {
         service.deleteCardOnBoard(boardId, cardId);
